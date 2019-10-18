@@ -4,17 +4,17 @@ haschanged() {
         hostlist=$1
         domain="$2"
         ipaddressnew=`dig +short myip.opendns.com @resolver1.opendns.com`
-        for host in ${hostlist[@]}
+        for host in "${hostlist[@]}"
         do
-                if [ $host == "@" ]; then
-                        ipaddresscurrent=`nslookup $domain | grep Address | grep -v "#" | cut -f2 -d" "`
+                if [ "$host" == "@" ]; then
+                        ipaddresscurrent=`nslookup "$domain" | grep Address | grep -v "#" | cut -f2 -d" "`
                 else
-                        ipaddresscurrent=`nslookup $host.$domain | grep Address | grep -v "#" | cut -f2 -d" "`
+			echo "$host"."$domain"
+                        ipaddresscurrent=`nslookup "$host"."$domain" | grep Address | grep -v "#" | cut -f2 -d" "`
                 fi
                 if [ "$ipaddresscurrent" != "$ipaddressnew" ]; then
                         isdiff=1
                 fi
-
         done
         return $isdiff
 }
@@ -22,7 +22,7 @@ update() {
         hostlist=$1
         domain="$2"
         password="$3"
-        for host in ${hostlist[@]}
+        for host in "${hostlist[@]}"
         do
                 response=`curl http://dynamicdns.park-your-domain.com/update?host="$host"\&domain="$domain"\&password="$password"`
                 echo
